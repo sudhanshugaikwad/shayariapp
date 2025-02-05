@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
-// import AddShayari from "./AddShayari";
+
 const FormContainer = styled.div`
   max-width: 400px;
   margin: 50px auto;
@@ -42,45 +42,47 @@ const Login = ({ setUser }) => {
     try {
       const { data } = await axios.post(
         "http://localhost:5000/api/auth/login",
-        { email, password }
+        {
+          email,
+          password,
+        }
       );
-      localStorage.setItem("token", data.token);
+      console.log(data); // Check if the response contains the necessary data
       setUser(data.user);
       navigate("/");
     } catch (error) {
-      console.log("Login failed");
+      console.error(
+        "Login failed:",
+        error.response ? error.response.data : error
+      );
+      alert("Login failed! Please check your credentials.");
     }
   };
 
   return (
-    <>
-      <FormContainer>
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <Button type="submit">Login</Button>
-          <SmallText>
-            Don't have an account ?<Link to="/register">Register</Link>
-          </SmallText>
-        </form>
-      </FormContainer>
-
-      {/* <AddShayari /> */}
-    </>
+    <FormContainer>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <Button type="submit">Login</Button>
+        <SmallText>
+          Don't have an account? <Link to="/register">Register</Link>
+        </SmallText>
+      </form>
+    </FormContainer>
   );
 };
 

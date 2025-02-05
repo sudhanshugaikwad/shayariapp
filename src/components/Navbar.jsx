@@ -36,7 +36,7 @@ const Navbar = ({ user, setUser }) => {
         {user ? (
           <>
             <Link to="/">Create Shayari</Link>
-            <Link to="/">Profile</Link>
+            <Link to="/Profile">Profile</Link>
 
             <button
               onClick={handleLogout}

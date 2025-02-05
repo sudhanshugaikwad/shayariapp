@@ -40,6 +40,8 @@ const Profile = ({ user, setUser }) => {
   const [shayaris, setShayaris] = useState([]);
   const [name, setName] = useState(user?.name || "");
   const [profileImage, setProfileImage] = useState(user?.profileImage || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,16 +64,16 @@ const Profile = ({ user, setUser }) => {
   }, []);
 
   const handleProfileUpdate = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await axios.put(
-        "http://localhost:5000/api/auth/update",
-        { name, profileImage },
+      await axios.put(
+        "http://localhost:5000/api/auth/profile",
+        { name, email, password, profileImage },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setUser(data);
+      alert("Profile updated successfully");
     } catch (error) {
-      console.log("Error updating profile");
+      console.error("Error updating profile:", error);
     }
   };
 
@@ -99,6 +101,18 @@ const Profile = ({ user, setUser }) => {
         placeholder="Update Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
+      />
+      <Input
+        type="email"
+        placeholder="Update Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Update Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <Input
         type="text"
