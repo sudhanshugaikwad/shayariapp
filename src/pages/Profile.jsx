@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import ShayariCard from "../components/ShayariCard";
 import { useNavigate } from "react-router-dom";
 
 const ProfileContainer = styled.div`
@@ -37,57 +36,35 @@ const Button = styled.button`
 `;
 
 const Profile = ({ user, setUser }) => {
-  const [shayaris, setShayaris] = useState([]);
-  const [name, setName] = useState(user?.name || "");
-  const [profileImage, setProfileImage] = useState(user?.profileImage || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserShayaris = async () => {
+    const fetchUserProfile = async () => {
       try {
         const token = localStorage.getItem("token");
         const { data } = await axios.get(
-          "http://localhost:5000/api/shayari/mine",
+          "http://localhost:5000/api/auth/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        setShayaris(data);
+
+        // Set fetched user data
+        setName(data.name);
+        setEmail(data.email);
+        setProfileImage(data.profileImage || "https://via.placeholder.com/120");
       } catch (error) {
-        console.log("Error fetching shayaris");
+        console.log("Error fetching user profile");
+        setMessage("Error fetching profile information.");
       }
     };
 
-    fetchUserShayaris();
+    fetchUserProfile();
   }, []);
-
-  const handleProfileUpdate = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      await axios.put(
-        "http://localhost:5000/api/auth/profile",
-        { name, email, password, profileImage },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("Profile updated successfully");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-  };
-
-  const handleDeleteShayari = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/shayari/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setShayaris(shayaris.filter((shayari) => shayari._id !== id));
-    } catch (error) {
-      console.log("Error deleting Shayari");
-    }
-  };
 
   return (
     <ProfileContainer>
@@ -96,47 +73,11 @@ const Profile = ({ user, setUser }) => {
         src={profileImage || "https://via.placeholder.com/120"}
         alt="Profile"
       />
-      <Input
-        type="text"
-        placeholder="Update Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <Input
-        type="email"
-        placeholder="Update Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Input
-        type="password"
-        placeholder="Update Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Input
-        type="text"
-        placeholder="Profile Image URL"
-        value={profileImage}
-        onChange={(e) => setProfileImage(e.target.value)}
-      />
-      <Button onClick={handleProfileUpdate}>Update Profile</Button>
-
-      <h3>My Shayaris</h3>
-      {shayaris.map((shayari) => (
-        <div key={shayari._id}>
-          <ShayariCard shayari={shayari} />
-          <Button onClick={() => navigate(`/edit-shayari/${shayari._id}`)}>
-            Edit
-          </Button>
-          <Button
-            onClick={() => handleDeleteShayari(shayari._id)}
-            style={{ background: "red" }}
-          >
-            Delete
-          </Button>
-        </div>
-      ))}
+      <div>
+        <h3>Name: {name}</h3>
+        <h3>Email: {email}</h3>
+      </div>
+      {message && <p>{message}</p>}
     </ProfileContainer>
   );
 };

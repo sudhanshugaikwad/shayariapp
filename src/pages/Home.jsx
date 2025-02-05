@@ -30,6 +30,12 @@ const Content = styled.p`
   color: #333;
 `;
 
+const Author = styled.p`
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
@@ -91,6 +97,8 @@ const Home = () => {
         shayaris.map((shayari) => (
           <ShayariCard key={shayari._id}>
             <Content>{shayari.content}</Content>
+            <Author>By: {shayari.user.name}</Author>{" "}
+            {/* Assuming user info is available */}
             <ButtonGroup>
               <Button onClick={() => handleEdit(shayari._id)}>Edit</Button>
               <Button onClick={() => handleDelete(shayari._id)}>Delete</Button>

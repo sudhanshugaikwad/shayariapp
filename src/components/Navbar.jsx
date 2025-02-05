@@ -23,10 +23,15 @@ const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await axios.post("http://localhost:5000/api/auth/logout");
-    localStorage.removeItem("token");
-    setUser(null);
-    navigate("/login");
+    try {
+      await axios.post("http://localhost:5000/api/auth/logout"); // Logout request
+      localStorage.removeItem("token"); // Clear the token from localStorage
+      setUser(null); // Reset the user state to null
+      navigate("/login"); // Navigate to the login page
+      window.location.reload(); // Force page reload to reset everything
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (
