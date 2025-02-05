@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
-import AddShayari from "./AddShayari";
+// import AddShayari from "./AddShayari";
 const FormContainer = styled.div`
   max-width: 400px;
   margin: 50px auto;
@@ -54,7 +54,7 @@ const Login = ({ setUser }) => {
 
   return (
     <>
-      {/* <FormContainer>
+      <FormContainer>
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
           <Input
@@ -77,9 +77,9 @@ const Login = ({ setUser }) => {
             Don't have an account ?<Link to="/register">Register</Link>
           </SmallText>
         </form>
-      </FormContainer> */}
+      </FormContainer>
 
-      <AddShayari />
+      {/* <AddShayari /> */}
     </>
   );
 };
